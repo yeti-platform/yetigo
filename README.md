@@ -18,6 +18,8 @@ This is a Maltego Yeti integration tool to view (read-only) data from a Yeti ins
 
 edit your ~/.canari/yetigo.conf to set 
 
+![Alt Text](/doc/Images/yeticonf.png?=raw=True)
+
 <i>api_url =
 
 api_key =
@@ -25,6 +27,7 @@ api_key =
  
 In maltego, in the transforms manager,modify the path of the working directory.
 
+![Alt Text](/doc/Images/WorkingDir.png)
 ## Usage
 
 The transforms are:
