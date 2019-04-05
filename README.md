@@ -14,6 +14,8 @@ This is a Maltego Yeti integration tool to view (read-only) data from a Yeti ins
 
 `canari create-profile yetigo`
 
+![Alt Text](/doc/Images/createprofile.png?raw=True)
+
 edit your ~/.canari/yetigo.conf to set 
 
 <i>api_url =
