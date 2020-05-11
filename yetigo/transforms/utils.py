@@ -10,7 +10,8 @@ mapping_yeti_to_maltego ={
     "Hash": Hash,
     "Ip": IPv4Address,
     "Url": URL,
-    "File": Hash
+    "File": Hash,
+    "Domain": Domain
 
 }
 
