@@ -1,2 +1,2 @@
 canari
-git+git://github.com/yeti-platform/pyeti@py3
+git+git://github.com/yeti-platform/pyeti@master

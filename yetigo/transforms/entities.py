@@ -1,3 +1,5 @@
+import sys
+
 from canari.maltego.entities import Phrase
 from canari.maltego.message import Entity, IntegerEntityField, StringEntityField, MatchingRule
 
@@ -6,12 +8,17 @@ __all__ = [
 ]
 
 
+def str_to_class(classname):
+    return getattr(sys.modules[__name__], classname)
+
+
 class SourceYeti(Phrase):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
     link = StringEntityField('link', display_name='link',
                              matching_rule=MatchingRule.Loose)
+
 
 class Actor(Entity):
 
