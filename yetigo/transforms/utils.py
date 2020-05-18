@@ -1,10 +1,10 @@
-from canari.maltego.entities import Domain, Hash,IPv4Address,URL
+from canari.maltego.entities import Domain, Hash, IPv4Address, URL
 from canari.maltego.message import MaltegoException
 import pyeti
 
 yeti_connection = None
 
-mapping_yeti_to_maltego ={
+mapping_yeti_to_maltego = {
 
     "Hostname": Domain,
     "Hash": Hash,
