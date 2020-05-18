@@ -12,7 +12,7 @@ from yetigo.transforms.entities import SourceYeti
 
 class ObservableInYeti(Transform):
     input_type = Unknown
-    display_name = "In Yeti?"
+    display_name = "[YT] In Yeti?"
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -27,7 +27,7 @@ class ObservableInYeti(Transform):
 
 class TagsInYeti(Transform):
     input_type = Unknown
-    display_name = 'Tags In Yeti'
+    display_name = '[YT] Tags In Yeti'
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -49,7 +49,7 @@ class TagsInYeti(Transform):
 
 class SourcesInYeti(Transform):
     input_type = Unknown
-    display_name = 'Sources In Yeti'
+    display_name = '[YT] Sources In Yeti'
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -75,7 +75,7 @@ class SourcesInYeti(Transform):
 
 class TagToObservables(Transform):
     input_type = Unknown
-    display_name = 'Tags to observables'
+    display_name = '[YT] Tags to observables'
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -101,7 +101,7 @@ class TagToObservables(Transform):
 
 class NeighborsObservable(Transform):
     input_type = Unknown
-    display_name = 'Observable to observables'
+    display_name = '[YT] Observable to observables'
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -125,7 +125,7 @@ class NeighborsObservable(Transform):
 
 class ObservableToEntities(Transform):
     input_type = Unknown
-    display_name = 'Observable to entities'
+    display_name = '[YT] Observable to entities'
 
     def do_transform(self, request, response, config):
         entity = request.entity
@@ -146,7 +146,7 @@ class ObservableToEntities(Transform):
 
 class EntityToObservables(Transform):
     input_type = Unknown
-    display_name = 'Entity to observables'
+    display_name = '[YT] Entity to observables'
 
     def do_transform(self, request, response, config):
 
