@@ -7,8 +7,8 @@ from yetigo.transforms.utils import get_yeti_connection, mapping_yeti_to_maltego
 from yetigo.transforms.entities import str_to_class
 from dateutil import parser
 
-
 from yetigo.transforms.entities import SourceYeti
+
 
 class ObservableInYeti(Transform):
     input_type = Unknown
@@ -112,7 +112,8 @@ class NeighborsObservable(Transform):
             if res:
                 for item in res['data']:
                     type_obs = item['_cls'].split('.')[1]
-                    entity_add = mapping_yeti_to_maltego[type_obs](item['value'])
+                    entity_add = mapping_yeti_to_maltego[type_obs](
+                        item['value'])
                     if type_obs == 'Url':
                         entity_add.url = item['value']
                     created_date = parser.parse(item['created'])
