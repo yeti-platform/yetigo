@@ -116,10 +116,12 @@ class NeighborsObservable(Transform):
                 if res:
                     for item in res['data']:
                         type_obs = item['_cls'].split('.')[1]
-                        entity_add = mapping_yeti_to_maltego[type_obs](
+                        entity_add = str_to_class(type_obs)(
                             item['value'])
                         if type_obs == 'Url':
                             entity_add.url = item['value']
+                        entity_add.tags = [t['name'] for t in item['tags']]
+                        entity_add.Type = type_obs
                         created_date = parser.parse(item['created'])
                         entity_add.link_label = 'created:%s' % created_date.isoformat()
                         response += entity_add
@@ -142,6 +144,7 @@ class ObservableToEntities(Transform):
                 for item in res['data']:
                     entity_name = item['_cls'].split('.')[1]
                     entity_add = str_to_class(entity_name)()
+                    entity_add.tags = item['tags']
                     entity_add.value = item['name']
                     response += entity_add
 
@@ -163,7 +166,8 @@ class EntityToObservables(Transform):
 
             for item in res['data']:
                 type_obs = item['_cls'].split('.')[1]
-                entity_add = mapping_yeti_to_maltego[type_obs](item['value'])
+                entity_add = str_to_class(type_obs)(item['value'])
+                entity_add.tags = [t['name'] for t in item['tags']]
                 response += entity_add
         return response
 
