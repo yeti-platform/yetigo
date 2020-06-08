@@ -1,10 +1,11 @@
 import sys
 
-from canari.maltego.entities import Phrase
-from canari.maltego.message import Entity, IntegerEntityField, StringEntityField, MatchingRule
+from canari.maltego.entities import Phrase, Domain
+from canari.maltego.message import Entity, IntegerEntityField, StringEntityField \
+    , MatchingRule, EnumEntityField, ArrayEntityField
 
 __all__ = [
-    'SourceYeti'
+    'SourceYeti', 'Observable', 'Domain'
 ]
 
 
@@ -26,6 +27,7 @@ class Actor(Entity):
     _namespace_ = 'Yetigo'
 
     actor = StringEntityField('Actor', display_name='Actor')
+    tags = ArrayEntityField('Tags', display_name='Tags')
 
 
 class Exploits(Entity):
@@ -38,6 +40,7 @@ class Campaign(Entity):
     _namespace_ = 'Yetigo'
 
     campaign = StringEntityField('Campaign', display_name='Campaign')
+    tags = ArrayEntityField('Tags', display_name='Tags')
 
 
 class Malware(Entity):
@@ -45,4 +48,31 @@ class Malware(Entity):
     _namespace_ = 'Yetigo'
 
     malware = StringEntityField('Malware', display_name='Malware')
+    tags = ArrayEntityField('Tags', display_name='Tags')
+
+class Observable(Entity):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+    observable = StringEntityField('Observable', display_name='Observable')
+    type_obs = StringEntityField('type', display_name='type')
+    tags = ArrayEntityField('Tags', display_name='Tags')
+    context = StringEntityField('Context', display_name='Context')
+    source = StringEntityField('Source', display_name='Source')
+
+
+class Domain(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class Hostname(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class Hash(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
 

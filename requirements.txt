@@ -1,2 +1,3 @@
 canari
 git+git://github.com/yeti-platform/pyeti@master
+validators

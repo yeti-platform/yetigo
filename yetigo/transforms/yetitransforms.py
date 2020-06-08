@@ -1,12 +1,14 @@
+import json
 import logging
 
 from canari.maltego.entities import Hashtag, Phrase
 from canari.maltego.message import Unknown, Bookmark, Field
 from canari.maltego.transform import Transform
-from yetigo.transforms.utils import get_yeti_connection, mapping_yeti_to_maltego
-from yetigo.transforms.entities import str_to_class
+from yetigo.transforms.utils import get_yeti_connection, \
+    mapping_yeti_to_maltego, get_hash_entities, get_av_sig, do_transform
+from yetigo.transforms.entities import str_to_class, Observable, Domain, Hash
 from dateutil import parser
-
+import validators
 from yetigo.transforms.entities import SourceYeti
 
 
@@ -108,19 +110,21 @@ class NeighborsObservable(Transform):
         yeti = get_yeti_connection(config)
 
         if yeti:
-            res = yeti.neighbors_observables(entity.value)
-            if res:
-                for item in res['data']:
-                    type_obs = item['_cls'].split('.')[1]
-                    entity_add = mapping_yeti_to_maltego[type_obs](
-                        item['value'])
-                    if type_obs == 'Url':
-                        entity_add.url = item['value']
-                    created_date = parser.parse(item['created'])
-                    entity_add.link_label = 'created:%s' % created_date.isoformat()
-                    response += entity_add
+            obs = yeti.observable_search(value=entity.value)
+            if obs:
+                res = yeti.neighbors_observables(obs[0]['id'])
+                if res:
+                    for item in res['data']:
+                        type_obs = item['_cls'].split('.')[1]
+                        entity_add = mapping_yeti_to_maltego[type_obs](
+                            item['value'])
+                        if type_obs == 'Url':
+                            entity_add.url = item['value']
+                        created_date = parser.parse(item['created'])
+                        entity_add.link_label = 'created:%s' % created_date.isoformat()
+                        response += entity_add
 
-        return response
+            return response
 
 
 class ObservableToEntities(Transform):
@@ -162,3 +166,66 @@ class EntityToObservables(Transform):
                 entity_add = mapping_yeti_to_maltego[type_obs](item['value'])
                 response += entity_add
         return response
+
+
+class EntityToEntities(Transform):
+    input_type = Unknown
+    display_name = '[YT] Entity to entities'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        yeti = get_yeti_connection(config)
+
+        if yeti:
+
+            ent = yeti.entity_search(name=entity.value)[0]
+            res = yeti.entity_to_entities(ent['id'])
+            for item in res['data']:
+                entity_add = str_to_class(item['_cls'].split('.')[1])()
+                entity_add.tags = item['tags']
+                entity_add.value = item['name']
+
+                response += entity_add
+            return response
+
+
+class VTHashYeti(Transform):
+    input_type = Hash
+    display_name = '[YT] Hash Virustotal'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        yeti = get_yeti_connection(config)
+
+        if yeti:
+            observable = yeti.observable_add(entity.value)
+            oneshot = yeti.get_analytic_oneshot('Virustotal')
+            res = yeti.analytics_oneshot_run(oneshot, observable)
+            if res:
+                virus_res = res['nodes'][0]
+                context_vt = list(
+                    filter(lambda x: x['source'] == 'virustotal_query',
+                           res['nodes'][0]['context']))
+                context_filter = sorted(context_vt,
+                                        key=lambda x: parser.parse(
+                                            x['scan_date']))
+                if len(context_filter) > 0:
+                    last_context = context_filter[0]
+                    vt_res = json.loads(last_context['raw'])
+                    for h in get_hash_entities(vt_res,
+                                               list_hash=['md5', 'sha256',
+                                                          'sha1']):
+                        if h.value != entity.value:
+                            response += h
+
+                    for ph in get_av_sig(vt_res['scans'].items()):
+                        response += ph
+            return response
+
+
+class AddDomain(Transform):
+    input_type = Domain
+    display_name = '[YT] Add Domain'
+
+    def do_transform(self, request, response, config):
+        return do_transform(request, response, config)
