@@ -76,3 +76,11 @@ class Hash(Observable):
     _namespace_ = 'Yetigo'
 
 
+class Ip(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class File(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
