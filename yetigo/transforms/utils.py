@@ -55,6 +55,13 @@ def get_av_sig(signature_vt):
             yield ph
 
 
+def get_status_domains(vt_result):
+    for av, res in vt_result:
+        ph = Phrase(value=av)
+        ph.link_label = res['result']
+
+        yield ph
+
 def do_transform(request, response, config):
     entity = request.entity
     yeti = get_yeti_connection(config)
