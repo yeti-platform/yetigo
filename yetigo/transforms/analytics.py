@@ -1,11 +1,11 @@
 import json
 
 from canari.maltego.transform import Transform
-from dateutil.parser import parser
+from dateutil import parser
 
-from yetigo.transforms.entities import Hash
+from yetigo.transforms.entities import Hash, Domain
 from yetigo.transforms.utils import get_yeti_connection, get_av_sig, \
-    get_hash_entities
+    get_hash_entities, get_status_domains
 
 
 class VTHashYeti(Transform):
@@ -41,3 +41,31 @@ class VTHashYeti(Transform):
                         response += ph
             return response
 
+class VTDomains(Transform):
+
+    input_type = Domain
+    display_name = '[YT] VT Domain Status'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        yeti = get_yeti_connection(config)
+
+        if yeti:
+            oneshot = yeti.get_analytic_oneshot('Virustotal')
+            observable = yeti.observable_add(entity.value)
+            res = yeti.analytics_oneshot_run(oneshot, observable)
+            if res:
+                virus_res = res['nodes'][0]
+                context_vt = list(
+                    filter(lambda x: x['source'] == 'virustotal_query',
+                           virus_res['context']))
+                context_filter = sorted(context_vt,
+                                        key=lambda x: parser.parse(
+                                            json.loads(x['raw'])['scan_date']))
+                if len(context_filter) > 0:
+                    last_context = context_filter[0]
+                    vt_res = json.loads(last_context['raw'])
+
+                    for ph in get_status_domains(vt_res['scans'].items()):
+                        response += ph
+            return response
