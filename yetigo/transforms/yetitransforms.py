@@ -144,7 +144,8 @@ class ObservableToEntities(Transform):
                 for item in res['data']:
                     entity_name = item['_cls'].split('.')[1]
                     entity_add = str_to_class(entity_name)()
-                    entity_add.tags = item['tags']
+                    if 'tags' in item:
+                        entity_add.tags = [t for t in item['tags']]
                     entity_add.value = item['name']
                     response += entity_add
 

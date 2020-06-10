@@ -3,6 +3,8 @@ from canari.maltego.message import MaltegoException
 import pyeti
 import validators
 
+from yetigo.transforms.entities import Hostname, Ip
+
 yeti_connection = None
 
 mapping_yeti_to_maltego = {
@@ -56,11 +58,38 @@ def get_av_sig(signature_vt):
 
 
 def get_status_domains(vt_result):
-    for av, res in vt_result:
-        ph = Phrase(value=av)
-        ph.link_label = res['result']
+    if 'scans' in vt_result:
+        for av, res in vt_result['scans'].items():
+            ph = Phrase(value=av)
+            ph.link_label = res['result']
 
-        yield ph
+            yield ph
+
+
+def get_sample_by_ip_vt(current_context, keys):
+    for k in keys:
+        if k in current_context:
+            for samp in current_context[k]:
+                h = Hash(samp['sha256'])
+                h.link_label = 'scoring: %s date: %s' % (
+                samp['positives'] / samp['total'], samp['date'])
+                yield h
+
+
+def get_hostnames_by_ip_vt(current_context):
+
+    for r in current_context['resolutions']:
+        h = Hostname(r['hostname'])
+        h.link_label = 'last resolved: %s' % r['last_resolved']
+        yield h
+
+
+def get_ips_by_hostname_vt(current_context):
+    for r in current_context:
+        ip = Ip(r['ip_address'])
+        ip.link_label = '%s:%s' % ('Passive DNS', r['last_resolved'])
+        yield ip
+
 
 def do_transform(request, response, config):
     entity = request.entity

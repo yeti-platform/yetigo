@@ -50,6 +50,14 @@ class Malware(Entity):
     malware = StringEntityField('Malware', display_name='Malware')
     tags = ArrayEntityField('Tags', display_name='Tags')
 
+
+class Company(Entity):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+    name = StringEntityField('Name', display_name='Name')
+    tags = ArrayEntityField('Tags', display_name='Tags')
+
+
 class Observable(Entity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
@@ -82,5 +90,10 @@ class Ip(Observable):
 
 
 class File(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class Url(Observable):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
