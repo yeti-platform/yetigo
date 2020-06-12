@@ -6,7 +6,7 @@ from dateutil import parser
 from yetigo.transforms.entities import Hash, Domain, Ip, Hostname
 from yetigo.transforms.utils import get_yeti_connection, get_av_sig, \
     get_hash_entities, get_status_domains,get_sample_by_ip_vt,get_hostnames_by_ip_vt,\
-    get_ips_by_hostname_vt
+    get_ips_by_hostname_vt, run_oneshot
 
 
 class VTHashYeti(Transform):
@@ -18,9 +18,7 @@ class VTHashYeti(Transform):
         yeti = get_yeti_connection(config)
 
         if yeti:
-            observable = yeti.observable_add(entity.value)
-            oneshot = yeti.get_analytic_oneshot('Virustotal')
-            res = yeti.analytics_oneshot_run(oneshot, observable)
+            res = run_oneshot(entity.value, 'Virustotal', yeti)
             if res:
                 virus_res = res['nodes'][0]
                 context_vt = list(
@@ -42,6 +40,7 @@ class VTHashYeti(Transform):
                         response += ph
             return response
 
+
 class VTDomains(Transform):
 
     input_type = Hostname
@@ -52,9 +51,7 @@ class VTDomains(Transform):
         yeti = get_yeti_connection(config)
 
         if yeti:
-            oneshot = yeti.get_analytic_oneshot('Virustotal')
-            observable = yeti.observable_add(entity.value)
-            res = yeti.analytics_oneshot_run(oneshot, observable)
+            res = run_oneshot(entity.value, 'Virustotal', yeti)
             if res:
                 virus_res = res['nodes'][0]
                 context_vt = list(
@@ -70,6 +67,7 @@ class VTDomains(Transform):
                             response += ip
             return response
 
+
 class VTIPStatus(Transform):
 
     input_type = Ip
@@ -80,10 +78,7 @@ class VTIPStatus(Transform):
         yeti=get_yeti_connection(config)
 
         if yeti:
-            oneshot = yeti.get_analytic_oneshot('Virustotal')
-            observable = yeti.observable_add(entity.value)
-            res = yeti.analytics_oneshot_run(oneshot, observable)
-
+            res = run_oneshot(entity.value, 'Virustotal', yeti)
             if res:
                 virus_res = res['nodes'][0]
                 context_vt = list(
