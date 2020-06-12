@@ -108,3 +108,12 @@ def do_transform(request, response, config):
                                   source='Maltego')
         if res:
             return response
+
+
+def run_oneshot(obs,name_oneshost,yeti):
+    observable = yeti.observable_add(obs)
+    oneshot = yeti.get_analytic_oneshot(name_oneshost)
+    res = yeti.analytics_oneshot_run(oneshot, observable)
+    if res:
+        return res
+
