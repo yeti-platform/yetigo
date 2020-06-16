@@ -119,7 +119,7 @@ def run_oneshot(obs,name_oneshost,yeti):
         return res
 
 
-def get_obs_dnsdb(res,entity):
+def get_obs(res, entity, source):
     current_node = list(filter(lambda x: x['value'] == entity.value,
                                res['nodes']))[0]
     nodes = list(filter(lambda x: x['value'] != entity.value,
@@ -138,7 +138,7 @@ def get_obs_dnsdb(res,entity):
         type_obs = nodes[_id]['_cls'].split('.')[1]
         obs = str_to_class(type_obs)(nodes[_id]['value'])
         history = sorted(
-            list(filter(lambda x: 'DNSDB Passive DNS' in x['sources'],
+            list(filter(lambda x: source in x['sources'],
                         n['history'])),
             key=lambda x: parser.parser(x['last_seen']))
 
@@ -146,3 +146,15 @@ def get_obs_dnsdb(res,entity):
                                     history[0]['last_seen'])
 
         yield obs
+
+
+def create_response(request, response, config, name_analytic, source):
+    entity = request.entity
+    yeti = get_yeti_connection(config)
+
+    if yeti:
+        res = run_oneshot(entity.value, name_analytic, yeti)
+        if res:
+            for obs in get_obs(res, entity, source):
+                response += obs
+            return response
