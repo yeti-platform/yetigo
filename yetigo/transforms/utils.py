@@ -1,9 +1,10 @@
 from canari.maltego.entities import Domain, Hash, IPv4Address, URL, Phrase
 from canari.maltego.message import MaltegoException
+from yetigo.transforms.entities import Hostname, Ip, str_to_class
+
+from dateutil import parser
 import pyeti
 import validators
-
-from yetigo.transforms.entities import Hostname, Ip
 
 yeti_connection = None
 
@@ -117,3 +118,31 @@ def run_oneshot(obs,name_oneshost,yeti):
     if res:
         return res
 
+
+def get_obs_dnsdb(res,entity):
+    current_node = list(filter(lambda x: x['value'] == entity.value,
+                               res['nodes']))[0]
+    nodes = list(filter(lambda x: x['value'] != entity.value,
+                        res['nodes']))
+    links = res['links']
+
+    nodes = {n['_id']: n for n in nodes}
+
+    selected_nodes = {_id:
+                          list(filter(
+                              lambda x: x['src']['id'] == _id or
+                                        x['dst']['id'] == _id,
+                              links))[0] for _id in nodes.keys()}
+
+    for _id, n in selected_nodes.items():
+        type_obs = nodes[_id]['_cls'].split('.')[1]
+        obs = str_to_class(type_obs)(nodes[_id]['value'])
+        history = sorted(
+            list(filter(lambda x: 'DNSDB Passive DNS' in x['sources'],
+                        n['history'])),
+            key=lambda x: parser.parser(x['last_seen']))
+
+        obs.link_label = '%s:%s' % (history[0]['description'],
+                                    history[0]['last_seen'])
+
+        yield obs
