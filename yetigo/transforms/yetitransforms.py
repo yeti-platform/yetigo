@@ -113,7 +113,7 @@ class NeighborsObservable(Transform):
             obs = yeti.observable_search(value=entity.value)
             if obs:
                 res = yeti.neighbors_observables(obs[0]['id'])
-                if res:
+                if res and 'data' in res:
                     for item in res['data']:
                         type_obs = item['_cls'].split('.')[1]
                         entity_add = str_to_class(type_obs)(
@@ -140,7 +140,7 @@ class ObservableToEntities(Transform):
         if yeti:
             obj = yeti.observable_search(value=entity.value)[0]
             res = yeti.observable_to_entities(obj['id'])
-            if res:
+            if res and 'data' in res:
                 for item in res['data']:
                     entity_name = item['_cls'].split('.')[1]
                     entity_add = str_to_class(entity_name)()
@@ -164,12 +164,12 @@ class EntityToObservables(Transform):
         if yeti:
             ent = yeti.entity_search(name=entity.value)[0]
             res = yeti.entity_to_observables(ent['id'])
-
-            for item in res['data']:
-                type_obs = item['_cls'].split('.')[1]
-                entity_add = str_to_class(type_obs)(item['value'])
-                entity_add.tags = [t['name'] for t in item['tags']]
-                response += entity_add
+            if res and 'data' in res:
+                for item in res['data']:
+                    type_obs = item['_cls'].split('.')[1]
+                    entity_add = str_to_class(type_obs)(item['value'])
+                    entity_add.tags = [t['name'] for t in item['tags']]
+                    response += entity_add
         return response
 
 
@@ -185,12 +185,13 @@ class EntityToEntities(Transform):
 
             ent = yeti.entity_search(name=entity.value)[0]
             res = yeti.entity_to_entities(ent['id'])
-            for item in res['data']:
-                entity_add = str_to_class(item['_cls'].split('.')[1])()
-                entity_add.tags = item['tags']
-                entity_add.value = item['name']
+            if res and 'data' in res:
+                for item in res['data']:
+                    entity_add = str_to_class(item['_cls'].split('.')[1])()
+                    entity_add.tags = item['tags']
+                    entity_add.value = item['name']
 
-                response += entity_add
+                    response += entity_add
             return response
 
 
