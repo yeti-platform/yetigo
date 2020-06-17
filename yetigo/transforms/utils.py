@@ -111,8 +111,10 @@ def do_transform(request, response, config):
             return response
 
 
-def run_oneshot(obs,name_oneshost,yeti):
-    observable = yeti.observable_add(obs)
+def run_oneshot(name_oneshost, request, config):
+    entity = request.entity
+    yeti = get_yeti_connection(config)
+    observable = yeti.observable_add(entity.value)
     oneshot = yeti.get_analytic_oneshot(name_oneshost)
     res = yeti.analytics_oneshot_run(oneshot, observable)
     if res:
@@ -149,12 +151,8 @@ def get_obs(res, entity, source):
 
 
 def create_response(request, response, config, name_analytic, source):
-    entity = request.entity
-    yeti = get_yeti_connection(config)
-
-    if yeti:
-        res = run_oneshot(entity.value, name_analytic, yeti)
+        res = run_oneshot('Virustotal', request, config)
         if res:
-            for obs in get_obs(res, entity, source):
+            for obs in get_obs(res, request.entity, source):
                 response += obs
             return response
