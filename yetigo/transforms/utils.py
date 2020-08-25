@@ -150,6 +150,13 @@ def get_obs(res, entity, source):
         yield obs
 
 
+def get_observable(obs_id, config):
+    yeti = get_yeti_connection(config)
+    obs = yeti.observable_details(obs_id)
+    if obs:
+        return obs
+
+
 def create_response(request, response, config, name_analytic, source):
         res = run_oneshot('Virustotal', request, config)
         if res:

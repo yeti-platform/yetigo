@@ -82,6 +82,10 @@ class Hostname(Observable):
 class Hash(Observable):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
+    malicious = StringEntityField('Malicious', display_name='Malicious')
+    undetected = StringEntityField('Undetected', display_name='Undetected')
+    suspicious = StringEntityField('Suspicious', display_name='Suspicious')
+    magic = StringEntityField('Magic', display_name='Magic')
 
 
 class Ip(Observable):
@@ -90,6 +94,16 @@ class Ip(Observable):
 
 
 class File(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class Url(Observable):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
+
+class Text(Observable):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 

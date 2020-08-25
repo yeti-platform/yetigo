@@ -113,17 +113,19 @@ class NeighborsObservable(Transform):
             obs = yeti.observable_search(value=entity.value)
             if obs:
                 res = yeti.neighbors_observables(obs[0]['id'])
-                if res and 'data' in res:
-                    for item in res['data']:
-                        type_obs = item['_cls'].split('.')[1]
+                if res and 'objs' in res:
+                    for item in res['objs']:
+                        type_obs = item['type']
                         entity_add = str_to_class(type_obs)(
                             item['value'])
+                        entity_add.link_label = ' '.join(
+                            [s for s in item['sources']])
                         if type_obs == 'Url':
                             entity_add.url = item['value']
                         entity_add.tags = [t['name'] for t in item['tags']]
                         entity_add.Type = type_obs
                         created_date = parser.parse(item['created'])
-                        entity_add.link_label = 'created:%s' % created_date.isoformat()
+                        entity_add.link_label += ' created:%s' % created_date.isoformat()
                         response += entity_add
 
             return response
