@@ -116,17 +116,24 @@ class NeighborsObservable(Transform):
                 if res and 'objs' in res:
                     for item in res['objs']:
                         type_obs = item['type']
-                        entity_add = str_to_class(type_obs)(
-                            item['value'])
-                        entity_add.link_label = ' '.join(
-                            [s for s in item['sources']])
-                        if type_obs == 'Url':
-                            entity_add.url = item['value']
-                        entity_add.tags = [t['name'] for t in item['tags']]
-                        entity_add.Type = type_obs
-                        created_date = parser.parse(item['created'])
-                        entity_add.link_label += ' created:%s' % created_date.isoformat()
-                        response += entity_add
+                        entity_add = None
+                        try:
+                            entity_add = str_to_class(type_obs)(
+                                item['value'])
+                        except AttributeError as e:
+                            pass
+
+                        if entity_add:
+                            entity_add.link_label = ' '.join(
+                                [s for s in item['sources']])
+                            if type_obs == 'Url':
+                                entity_add.url = item['value']
+                            entity_add.tags = [t['name'] for t in item['tags']]
+                            entity_add.Type = type_obs
+                            created_date = parser.parse(item['created'])
+                            if created_date:
+                                entity_add.link_label = ' created:%s' % created_date.isoformat()
+                            response += entity_add
 
             return response
 
@@ -142,14 +149,19 @@ class ObservableToEntities(Transform):
         if yeti:
             obj = yeti.observable_search(value=entity.value)[0]
             res = yeti.observable_to_entities(obj['id'])
-            if res and 'data' in res:
-                for item in res['data']:
-                    entity_name = item['_cls'].split('.')[1]
-                    entity_add = str_to_class(entity_name)()
-                    if 'tags' in item:
-                        entity_add.tags = [t for t in item['tags']]
-                    entity_add.value = item['name']
-                    response += entity_add
+            if res and 'objs' in res:
+                for item in res['objs']:
+                    entity_name = item['type']
+                    entity_add = None
+                    try:
+                        entity_add = str_to_class(entity_name)()
+                    except:
+                        pass
+                    if entity_add:
+                        if 'tags' in item:
+                            entity_add.tags = [t for t in item['tags']]
+                        entity_add.value = item['name']
+                        response += entity_add
 
         return response
 
@@ -166,9 +178,9 @@ class EntityToObservables(Transform):
         if yeti:
             ent = yeti.entity_search(name=entity.value)[0]
             res = yeti.entity_to_observables(ent['id'])
-            if res and 'data' in res:
-                for item in res['data']:
-                    type_obs = item['_cls'].split('.')[1]
+            if res and 'objs' in res:
+                for item in res['objs']:
+                    type_obs = item['type']
                     entity_add = str_to_class(type_obs)(item['value'])
                     entity_add.tags = [t['name'] for t in item['tags']]
                     response += entity_add
