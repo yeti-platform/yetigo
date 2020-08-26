@@ -107,7 +107,6 @@ class Text(Observable):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
-
-class Url(Observable):
+class As(Observable):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
