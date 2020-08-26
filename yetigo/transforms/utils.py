@@ -166,13 +166,13 @@ def create_response(request, response, config, name_analytic, source):
             return response
 
 
-def get_entities(request, response, config, name_entity=None):
+def get_entity_for_observable(request, response, config, name_entity=None):
     entity = request.entity
     yeti = get_yeti_connection(config)
 
     if yeti:
         obj = yeti.observable_search(value=entity.value)[0]
-        res = select_request(yeti, name_entity, obj)
+        res = select_request_observable_to_entity(yeti, name_entity, obj)
         if res and 'objs' in res:
             for item in res['objs']:
                 entity_name = item['type']
@@ -188,8 +188,24 @@ def get_entities(request, response, config, name_entity=None):
                     response += entity_add
         return response
 
+def get_entity_to_entity(request, response, config, name_entity=None):
+    entity = request.entity
+    yeti = get_yeti_connection(config)
 
-def select_request(yeti, name_entity, obj):
+    if yeti:
+
+        ent = yeti.entity_search(name=entity.value)[0]
+        res = select_request_entity_to_entity(yeti, name_entity, ent)
+        if res and 'data' in res:
+            for item in res['data']:
+                entity_add = str_to_class(item['_cls'].split('.')[1])()
+                entity_add.tags = item['tags']
+                entity_add.value = item['name']
+
+                response += entity_add
+        return response
+
+def select_request_observable_to_entity(yeti, name_entity, obj):
     if name_entity == 'company':
         return yeti.observable_to_company(obj['id'])
     elif name_entity == 'actor':
@@ -204,5 +220,24 @@ def select_request(yeti, name_entity, obj):
         return yeti.observable_to_indicator(obj['id'])
     elif name_entity == 'malware':
         return yeti.observable_to_malware(obj['id'])
+    else:
+        return None
+
+
+def select_request_entity_to_entity(yeti, name_entity, entity):
+    if name_entity == 'company':
+        return yeti.entity_to_company(entity['id'])
+    elif name_entity == 'actor':
+        return yeti.entity_to_actor(entity['id'])
+    elif name_entity == 'campaign':
+        return yeti.entity_to_campaign(entity['id'])
+    elif name_entity == 'exploitkit':
+        return yeti.entity_to_exploitkit(entity['id'])
+    elif name_entity == 'exploit':
+        return yeti.entity_to_exploit(entity['id'])
+    elif name_entity == 'indicator':
+        return yeti.entity_to_indicator(entity['id'])
+    elif name_entity == 'malware':
+        return yeti.entity_to_malware(entity['id'])
     else:
         return None
