@@ -20,42 +20,37 @@ class SourceYeti(Phrase):
     link = StringEntityField('link', display_name='link',
                              matching_rule=MatchingRule.Loose)
 
+class YetiEntity(Entity):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
 
-class Actor(Entity):
+    name = StringEntityField('name', display_name='name')
+    tags = ArrayEntityField('tags', display_name='tags')
+
+class Actor(YetiEntity):
 
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
-    actor = StringEntityField('Actor', display_name='Actor')
-    tags = ArrayEntityField('Tags', display_name='Tags')
-
-
-class Exploits(Entity):
+class Exploits(YetiEntity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
 
-class Campaign(Entity):
+class Campaign(YetiEntity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
-    campaign = StringEntityField('Campaign', display_name='Campaign')
-    tags = ArrayEntityField('Tags', display_name='Tags')
 
-
-class Malware(Entity):
+class Malware(YetiEntity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
 
-    malware = StringEntityField('Malware', display_name='Malware')
-    tags = ArrayEntityField('Tags', display_name='Tags')
 
-
-class Company(Entity):
+class Company(YetiEntity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
-    name = StringEntityField('Name', display_name='Name')
-    tags = ArrayEntityField('Tags', display_name='Tags')
+
 
 
 class Observable(Entity):
