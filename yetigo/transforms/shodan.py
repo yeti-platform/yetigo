@@ -12,7 +12,7 @@ class Shodan(Transform):
 
     def do_transform(self, request, response, config):
         entity = request.entity
-        res = run_oneshot('VT Domain Resolution', request, config)
+        res = run_oneshot('Shodan', request, config)
 
         current_node = list(
             filter(lambda x: 'value' in x and x['value'] == entity.value,
