@@ -5,7 +5,8 @@ from canari.maltego.entities import Hashtag, Phrase
 from canari.maltego.message import Unknown, Bookmark, Field
 from canari.maltego.transform import Transform
 from yetigo.transforms.utils import get_yeti_connection, \
-    mapping_yeti_to_maltego, get_hash_entities, get_av_sig, do_transform
+    mapping_yeti_to_maltego, get_hash_entities, get_av_sig, do_transform, \
+    get_entities
 from yetigo.transforms.entities import str_to_class, Observable, Domain, Hash
 from dateutil import parser
 import validators
@@ -138,32 +139,60 @@ class NeighborsObservable(Transform):
             return response
 
 
-class ObservableToEntities(Transform):
-    input_type = Unknown
-    display_name = '[YT] Observable to entities'
+class ObservableToCompany(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Company'
 
     def do_transform(self, request, response, config):
-        entity = request.entity
-        yeti = get_yeti_connection(config)
+        return get_entities(request, response, config, name_entity='company')
 
-        if yeti:
-            obj = yeti.observable_search(value=entity.value)[0]
-            res = yeti.observable_to_entities(obj['id'])
-            if res and 'objs' in res:
-                for item in res['objs']:
-                    entity_name = item['type']
-                    entity_add = None
-                    try:
-                        entity_add = str_to_class(entity_name)()
-                    except:
-                        pass
-                    if entity_add:
-                        if 'tags' in item:
-                            entity_add.tags = [t for t in item['tags']]
-                        entity_add.value = item['name']
-                        response += entity_add
 
-        return response
+class ObservableToCampaign(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Campaign'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='campaign')
+
+
+class ObservableToIndicator(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Indicator'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='indicator')
+
+
+class ObservableToMalware(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Malware'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='malware')
+
+
+class ObservableToActor(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Actor'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='actor')
+
+
+class ObservableToExploit(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Exploit'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='exploit')
+
+
+class ObservableToExploitKit(Transform):
+    input_type = Observable
+    display_name = '[YT] Observable to Exploit Kit'
+
+    def do_transform(self, request, response, config):
+        return get_entities(request, response, config, name_entity='exploitkit')
 
 
 class EntityToObservables(Transform):

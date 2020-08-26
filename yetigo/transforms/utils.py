@@ -47,6 +47,7 @@ def get_hash_entities(context, list_hash):
         h.link_label = type_h
         yield h
 
+
 def get_av_sig(signature_vt):
 
     for av, res in signature_vt:
@@ -163,3 +164,45 @@ def create_response(request, response, config, name_analytic, source):
             for obs in get_obs(res, request.entity, source):
                 response += obs
             return response
+
+
+def get_entities(request, response, config, name_entity=None):
+    entity = request.entity
+    yeti = get_yeti_connection(config)
+
+    if yeti:
+        obj = yeti.observable_search(value=entity.value)[0]
+        res = select_request(yeti, name_entity, obj)
+        if res and 'objs' in res:
+            for item in res['objs']:
+                entity_name = item['type']
+                entity_add = None
+                try:
+                    entity_add = str_to_class(entity_name)()
+                except:
+                    pass
+                if entity_add:
+                    if 'tags' in item:
+                        entity_add.tags = [t for t in item['tags']]
+                    entity_add.value = item['name']
+                    response += entity_add
+        return response
+
+
+def select_request(yeti, name_entity, obj):
+    if name_entity == 'company':
+        return yeti.observable_to_company(obj['id'])
+    elif name_entity == 'actor':
+        return yeti.observable_to_actor(obj['id'])
+    elif name_entity == 'campaign':
+        return yeti.observable_to_campaign(obj['id'])
+    elif name_entity == 'exploitkit':
+        return yeti.observable_to_exploitkit(obj['id'])
+    elif name_entity == 'exploit':
+        return yeti.observable_to_exploit(obj['id'])
+    elif name_entity == 'indicator':
+        return yeti.observable_to_indicator(obj['id'])
+    elif name_entity == 'malware':
+        return yeti.observable_to_malware(obj['id'])
+    else:
+        return None
