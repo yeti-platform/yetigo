@@ -267,7 +267,7 @@ class EntityToExploitKit(Transform):
 
 
 class EntityToObservables(Transform):
-    input_type = Unknown
+    input_type = YetiEntity
     display_name = '[YT] Entity to observables'
 
     def do_transform(self, request, response, config):
