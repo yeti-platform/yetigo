@@ -145,7 +145,8 @@ class ObservableToCompany(Transform):
     display_name = '[YT] Observable to Company'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='company')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='company')
 
 
 class ObservableToCampaign(Transform):
@@ -153,7 +154,8 @@ class ObservableToCampaign(Transform):
     display_name = '[YT] Observable to Campaign'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='campaign')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='campaign')
 
 
 class ObservableToIndicator(Transform):
@@ -161,7 +163,8 @@ class ObservableToIndicator(Transform):
     display_name = '[YT] Observable to Indicator'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='indicator')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='indicator')
 
 
 class ObservableToMalware(Transform):
@@ -169,7 +172,8 @@ class ObservableToMalware(Transform):
     display_name = '[YT] Observable to Malware'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='malware')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='malware')
 
 
 class ObservableToActor(Transform):
@@ -177,7 +181,8 @@ class ObservableToActor(Transform):
     display_name = '[YT] Observable to Actor'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='actor')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='actor')
 
 
 class ObservableToExploit(Transform):
@@ -185,7 +190,8 @@ class ObservableToExploit(Transform):
     display_name = '[YT] Observable to Exploit'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='exploit')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='exploit')
 
 
 class ObservableToExploitKit(Transform):
@@ -193,7 +199,8 @@ class ObservableToExploitKit(Transform):
     display_name = '[YT] Observable to Exploit Kit'
 
     def do_transform(self, request, response, config):
-        return get_entity_for_observable(request, response, config, name_entity='exploitkit')
+        return get_entity_for_observable(request, response, config,
+                                         name_entity='exploitkit')
 
 
 class EntityToCompany(Transform):
@@ -238,7 +245,7 @@ class EntityToActor(Transform):
 
     def do_transform(self, request, response, config):
         return get_entity_to_entity(request, response, config,
-                                         name_entity='actor')
+                                    name_entity='actor')
 
 
 class EntityToExploit(Transform):
@@ -256,7 +263,8 @@ class EntityToExploitKit(Transform):
 
     def do_transform(self, request, response, config):
         return get_entity_to_entity(request, response, config,
-                                         name_entity='exploitkit')
+                                    name_entity='exploitkit')
+
 
 class EntityToObservables(Transform):
     input_type = Unknown
@@ -277,8 +285,6 @@ class EntityToObservables(Transform):
                     entity_add.tags = [t['name'] for t in item['tags']]
                     response += entity_add
         return response
-
-
 
 
 class AddDomain(Transform):
