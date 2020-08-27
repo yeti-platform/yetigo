@@ -1,7 +1,7 @@
 from canari.maltego.transform import Transform
 
-from yetigo.transforms.entities import Hash
-from yetigo.transforms.utils import run_oneshot,str_to_class
+from yetigo.transforms.entities import Hash, Hostname, Ip
+from yetigo.transforms.utils import run_oneshot, str_to_class, do_pdns
 
 
 class ThreatMinerRelativeHost(Transform):
@@ -21,3 +21,41 @@ class ThreatMinerRelativeHost(Transform):
                 response += entity_add
 
         return response
+
+
+class ThreatMinerRetrieveMetadata(Transform):
+    input_type = Hash
+    display_name = '[YT] ThreatMiner - Metadata'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Retrieve metadata.', request, config)
+
+
+class ThreatMinerPDNSHostname(Transform):
+    input_type = Hostname
+    display_name = '[YT] ThreatMiner - PDNS'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('ThreatMiner PDNS', request, config)
+
+        return do_pdns(res, entity, response)
+
+
+class ThreatMinerPDNSIP(Transform):
+    input_type = Ip
+    display_name = '[YT] ThreatMiner - PDNS'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('ThreatMiner PDNS', request, config)
+
+        return do_pdns(res, entity, response)
+
+
+
+
+
+
+

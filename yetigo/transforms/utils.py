@@ -241,3 +241,15 @@ def select_request_entity_to_entity(yeti, name_entity, entity):
         return yeti.entity_to_malware(entity['id'])
     else:
         return None
+
+
+def do_pdns(res, entity, response):
+    if res:
+        for item in res['nodes']:
+            if item['value'] != entity.value:
+                entity_add = str_to_class(item['_cls'].split('.')[1])(
+                    item['value'])
+                entity_add.link_label = 'Metadata'
+                response += entity_add
+
+    return response
