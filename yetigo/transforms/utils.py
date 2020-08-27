@@ -21,7 +21,6 @@ mapping_yeti_to_maltego = {
 
 
 def get_yeti_connection(config=None):
-
     global yeti_connection
 
     if yeti_connection:
@@ -49,7 +48,6 @@ def get_hash_entities(context, list_hash):
 
 
 def get_av_sig(signature_vt):
-
     for av, res in signature_vt:
         if res['detected']:
             ph = Phrase(value=res['result'])
@@ -74,12 +72,11 @@ def get_sample_by_ip_vt(current_context, keys):
             for samp in current_context[k]:
                 h = Hash(samp['sha256'])
                 h.link_label = 'scoring: %s date: %s' % (
-                samp['positives'] / samp['total'], samp['date'])
+                    samp['positives'] / samp['total'], samp['date'])
                 yield h
 
 
 def get_hostnames_by_ip_vt(current_context):
-
     for r in current_context['resolutions']:
         h = Hostname(r['hostname'])
         h.link_label = 'last resolved: %s' % r['last_resolved']
@@ -159,11 +156,11 @@ def get_observable(obs_id, config):
 
 
 def create_response(request, response, config, name_analytic, source):
-        res = run_oneshot('Virustotal', request, config)
-        if res:
-            for obs in get_obs(res, request.entity, source):
-                response += obs
-            return response
+    res = run_oneshot('Virustotal', request, config)
+    if res:
+        for obs in get_obs(res, request.entity, source):
+            response += obs
+        return response
 
 
 def get_entity_for_observable(request, response, config, name_entity=None):
@@ -189,6 +186,7 @@ def get_entity_for_observable(request, response, config, name_entity=None):
                     response += entity_add
         return response
 
+
 def get_entity_to_entity(request, response, config, name_entity=None):
     entity = request.entity
     yeti = get_yeti_connection(config)
@@ -205,6 +203,7 @@ def get_entity_to_entity(request, response, config, name_entity=None):
 
                 response += entity_add
         return response
+
 
 def select_request_observable_to_entity(yeti, name_entity, obj):
     if name_entity == 'company':
