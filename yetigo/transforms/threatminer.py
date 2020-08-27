@@ -54,8 +54,21 @@ class ThreatMinerPDNSIP(Transform):
         return do_pdns(res, entity, response)
 
 
+class ThreatMinerHTTPTraffic(Transform):
 
+    input_type = Hash
+    display_name = '[YT] ThreatMiner - HTTP Traffic'
 
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Related Hosts', request, config)
 
+        for item in res['nodes']:
+            if item['value'] != entity.value:
+                entity_add = str_to_class(item['_cls'].split('.')[1])(
+                    item['value'])
+                entity_add.link_label = 'HTTP Trafic'
+                response += entity_add
 
+        return response
 
