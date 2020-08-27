@@ -104,7 +104,7 @@ class TagToObservables(Transform):
 
 
 class NeighborsObservable(Transform):
-    input_type = Unknown
+    input_type = Observable
     display_name = '[YT] Observable to observables'
 
     def do_transform(self, request, response, config):
