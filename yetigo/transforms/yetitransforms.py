@@ -15,7 +15,7 @@ from yetigo.transforms.entities import SourceYeti
 
 
 class ObservableInYeti(Transform):
-    input_type = Unknown
+    input_type = Observable
     display_name = "[YT] In Yeti?"
 
     def do_transform(self, request, response, config):
@@ -30,7 +30,7 @@ class ObservableInYeti(Transform):
 
 
 class TagsInYeti(Transform):
-    input_type = Unknown
+    input_type = Observable
     display_name = '[YT] Tags In Yeti'
 
     def do_transform(self, request, response, config):
@@ -52,7 +52,7 @@ class TagsInYeti(Transform):
 
 
 class SourcesInYeti(Transform):
-    input_type = Unknown
+    input_type = Observable
     display_name = '[YT] Sources In Yeti'
 
     def do_transform(self, request, response, config):
@@ -78,7 +78,7 @@ class SourcesInYeti(Transform):
 
 
 class TagToObservables(Transform):
-    input_type = Unknown
+    input_type = Observable
     display_name = '[YT] Tags to observables'
 
     def do_transform(self, request, response, config):
