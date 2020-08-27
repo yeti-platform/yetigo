@@ -180,6 +180,7 @@ def get_entity_for_observable(request, response, config, name_entity=None):
                 try:
                     entity_add = str_to_class(entity_name)()
                 except:
+                    print('failed')
                     pass
                 if entity_add:
                     if 'tags' in item:
@@ -196,9 +197,9 @@ def get_entity_to_entity(request, response, config, name_entity=None):
 
         ent = yeti.entity_search(name=entity.value)[0]
         res = select_request_entity_to_entity(yeti, name_entity, ent)
-        if res and 'data' in res:
-            for item in res['data']:
-                entity_add = str_to_class(item['_cls'].split('.')[1])()
+        if res and 'objs' in res:
+            for item in res['objs']:
+                entity_add = str_to_class(item['type'])()
                 entity_add.tags = item['tags']
                 entity_add.value = item['name']
 
