@@ -72,3 +72,17 @@ class ThreatMinerHTTPTraffic(Transform):
 
         return response
 
+
+class ThreatMinerSubdomains(Transform):
+    input_type = Hostname
+    display_name = '[YT] ThreatMiner - Subdomains'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Lookup Subdomains', request, config)
+
+        for item in res['nodes']:
+            entity_add = Hostname(item['value'])
+            entity_add.link_label = 'Threatminer subdomain'
+            response += entity_add
+        return response
