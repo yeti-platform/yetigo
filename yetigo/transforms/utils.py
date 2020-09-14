@@ -255,15 +255,15 @@ def do_pdns(res, entity, response):
     return response
 
 
-def do_pdns_pt(res,entity,response):
+def do_pdns_pt(res, entity, response):
     for item in res['nodes']:
         if item['value'] != entity.value:
             link = list(filter(
                 lambda x: x['dst']['id'] == item['_id'] or x['src']['id'] ==
-                          item['_id'], res['context']))[0]
+                          item['_id'], res['links']))[0]
 
             entity_add = Ip(item['value'])
             entity_add.link_label = 'first_seen: %s last_seen: %s' % (
                 link['first_seen'], link['last_seen'])
             response += entity_add
-        return response
+    return response

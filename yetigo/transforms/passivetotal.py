@@ -17,7 +17,7 @@ class PTPassiveDNSByDomain(Transform):
 
 class PTPassiveDNSByIP(Transform):
 
-    input_type = Hostname
+    input_type = Ip
     display_name = '[YT] PT Passive DNS by IP'
 
     def do_transform(self, request, response, config):
