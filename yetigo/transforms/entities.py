@@ -27,10 +27,12 @@ class YetiEntity(Entity):
     name = StringEntityField('name', display_name='name')
     tags = ArrayEntityField('tags', display_name='tags')
 
+
 class Actor(YetiEntity):
 
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
+
 
 class Exploits(YetiEntity):
     _category_ = 'Yeti'
@@ -50,7 +52,6 @@ class Malware(YetiEntity):
 class Company(YetiEntity):
     _category_ = 'Yeti'
     _namespace_ = 'Yetigo'
-
 
 
 class Observable(Entity):

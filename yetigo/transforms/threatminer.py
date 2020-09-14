@@ -1,6 +1,6 @@
 from canari.maltego.transform import Transform
 
-from yetigo.transforms.entities import Hash, Hostname, Ip
+from yetigo.transforms.entities import Hash, Hostname, Ip, Url
 from yetigo.transforms.utils import run_oneshot, str_to_class, do_pdns
 
 
@@ -85,4 +85,37 @@ class ThreatMinerSubdomains(Transform):
             entity_add = Hostname(item['value'])
             entity_add.link_label = 'Threatminer subdomain'
             response += entity_add
+        return response
+
+
+class ThreatMinerUrlByIP(Transform):
+    input_type = Ip
+    display_name = '[YT] ThreatMiner Uri by IP'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('ThreatMiner Uri', request, config)
+
+        for item in res['nodes']:
+            if entity.value != item['value']:
+                entity_add = Url(item['value'])
+                entity_add.link_label = 'Threatminer Url'
+                response += entity_add
+
+        return response
+
+
+class ThreatMinerUrlByHostname(Transform):
+    input_type = Hostname
+    display_name = '[YT] ThreatMiner Uri by Hostname'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('ThreatMiner Uri', request, config)
+
+        for item in res['nodes']:
+            if entity.value != item['value']:
+                entity_add = Url(item['value'])
+                entity_add.link_label = 'Threatminer Url'
+                response += entity_add
         return response
