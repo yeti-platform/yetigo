@@ -1,7 +1,7 @@
 from canari.maltego.transform import Transform
 
 from yetigo.transforms.entities import Hostname, Ip
-from yetigo.transforms.utils import run_oneshot,do_pdns_pt
+from yetigo.transforms.utils import run_oneshot, do_pdns_pt, do_get_malware_pt
 
 
 class PTPassiveDNSByDomain(Transform):
@@ -38,3 +38,13 @@ class PTReverseNS(Transform):
             entity_add.link_label = 'Server NS'
             response += entity_add
         return response
+
+
+class PTGetMalwareByHostname(Transform):
+    input_type = Hostname
+    display_name = '[YT] PT Get Malware by Hostname'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Get Malware', request, config)
+        return do_get_malware_pt(res,entity, response)

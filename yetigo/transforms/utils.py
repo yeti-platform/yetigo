@@ -267,3 +267,12 @@ def do_pdns_pt(res, entity, response):
                 link['first_seen'], link['last_seen'])
             response += entity_add
     return response
+
+
+def do_get_malware_pt(res, entity, response):
+    for item in res['nodes']:
+        if item['value'] != entity.value:
+            entity_add = Hash(item['value'])
+            entity_add.link_label = 'Malware PT'
+            response += entity_add
+    return response
