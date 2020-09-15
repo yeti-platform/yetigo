@@ -58,3 +58,19 @@ class PTGetMalwareByIP(Transform):
         entity = request.entity
         res = run_oneshot('Get Malware', request, config)
         return do_get_malware_pt(res, entity, response)
+
+
+class PTGetSubdomains(Transform):
+    input_type = Hostname
+    display_name = '[YT] PT Get Subdomains'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Get Subdomains', request, config)
+
+        for item in res['nodes']:
+            if entity.value != item['value']:
+                h = Hostname(item['value'])
+                h.link_label = 'PT Subdomains'
+                response += h
+        return response
