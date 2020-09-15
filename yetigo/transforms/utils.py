@@ -1,7 +1,6 @@
-from canari.maltego.entities import Domain, Hash, IPv4Address, URL, Phrase
 from canari.maltego.message import MaltegoException
-from yetigo.transforms.entities import Hostname, Ip, str_to_class
-
+from yetigo.transforms.entities import Hostname, Ip, Url, Text, Hash, str_to_class
+from canari.maltego.entities import Domain, IPv4Address, URL, Phrase
 from dateutil import parser
 import pyeti
 import validators
@@ -50,7 +49,7 @@ def get_hash_entities(context, list_hash):
 def get_av_sig(signature_vt):
     for av, res in signature_vt:
         if res['detected']:
-            ph = Phrase(value=res['result'])
+            ph = Text(value=res['result'])
             ph.link_label = 'update:%s av:%s' % (res['update'],
                                                  av)
 

@@ -47,4 +47,14 @@ class PTGetMalwareByHostname(Transform):
     def do_transform(self, request, response, config):
         entity = request.entity
         res = run_oneshot('Get Malware', request, config)
-        return do_get_malware_pt(res,entity, response)
+        return do_get_malware_pt(res, entity, response)
+
+
+class PTGetMalwareByIP(Transform):
+    input_type = Ip
+    display_name = '[YT] PT Get Malware by IP'
+
+    def do_transform(self, request, response, config):
+        entity = request.entity
+        res = run_oneshot('Get Malware', request, config)
+        return do_get_malware_pt(res, entity, response)
