@@ -25,7 +25,7 @@ class VTHashReport(Transform):
             context_filter = sorted(context_vt,
                                     key=lambda x: parser.parse(
                                         x['last_seen']))
-
+            last_context  = None
             if len(context_filter) > 0:
                 last_context = context_filter[0]
                 entity.malicious = last_context['malicious']
@@ -36,6 +36,10 @@ class VTHashReport(Transform):
             for r in res['links']:
                 obs = get_observable(r['src']['id'], config)
                 h = Hash(obs['value'])
+                h.malicious = last_context['malicious']
+                h.undetected = last_context['undetected']
+                h.suspicious = last_context['suspicious']
+                h.magic = last_context['magic']
                 response += h
             return response
 
