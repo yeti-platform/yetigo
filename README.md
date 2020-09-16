@@ -28,6 +28,12 @@ api_key =
 In maltego, in the transforms manager,modify the path of the working directory.
 
 ![Alt Text](/doc/Images/WorkingDir.png)
+## Entities
+the entities of yeti must be imported in maltego. 
+
+the entities file is yetigo/resources/etc/
+![Alt_text](/doc/Images/entities.png)
+
 ## Usage
 
 The transforms are:
