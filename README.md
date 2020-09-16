@@ -34,4 +34,12 @@ The transforms are:
     
     * to check if the observable in Yeti
     * to link the tag of an observable of Yeti
-    * to link the datasource of an observable of Yeti 
+    * to link the datasource of an observable of Yeti
+## Icons Maltego
+
+All icons used for the all entities is here https://github.com/MISP/intelligence-icons
+
+This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+
+    Copyright 2016 Bret Jordan - original works with some potential licensed material
+    Copyright 2018 Françoise Penninckx - redesign from scratch
