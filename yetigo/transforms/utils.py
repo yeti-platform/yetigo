@@ -155,7 +155,7 @@ def get_observable(obs_id, config):
 
 
 def create_response(request, response, config, name_analytic, source):
-    res = run_oneshot('Virustotal', request, config)
+    res = run_oneshot(name_analytic, request, config)
     if res:
         for obs in get_obs(res, request.entity, source):
             response += obs
