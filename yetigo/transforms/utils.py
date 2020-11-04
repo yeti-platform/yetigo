@@ -261,7 +261,10 @@ def do_pdns_pt(res, entity, response):
                 lambda x: x['dst']['id'] == item['_id'] or x['src']['id'] ==
                           item['_id'], res['links']))[0]
 
-            entity_add = Ip(item['value'])
+            if entity.type == 'Yetigo.Hostname' and item['_cls'] == 'Observable.Ip':
+                entity_add = Ip(item['value'])
+            if entity.type == 'Yetigo.Ip' and item['_cls'] == 'Observable.Hostname':
+                entity_add = Hostname(item['value'])
             entity_add.link_label = 'first_seen: %s last_seen: %s' % (
                 link['first_seen'], link['last_seen'])
             response += entity_add
