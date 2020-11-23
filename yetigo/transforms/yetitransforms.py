@@ -8,7 +8,7 @@ from yetigo.transforms.utils import get_yeti_connection, \
     mapping_yeti_to_maltego, get_hash_entities, get_av_sig, do_transform, \
     get_entity_for_observable, get_entity_to_entity
 from yetigo.transforms.entities import str_to_class, Observable, Domain, Hash, \
-    YetiEntity
+    YetiEntity, Tag, SourceYeti
 from dateutil import parser
 import validators
 from yetigo.transforms.entities import SourceYeti
@@ -40,11 +40,8 @@ class TagsInYeti(Transform):
         if yeti:
             res = yeti.observable_search(value=entity.value)
             if res:
-                response += mapping_yeti_to_maltego[res[0]['type']](
-                    entity.value,
-                    bookmark=Bookmark.Green)
                 for t in res[0]['tags']:
-                    response += Hashtag(t['name'],
+                    response += Tag(t['name'],
                                         link_label='last_seen: %s' % t[
                                             'last_seen'],
                                         bookmark=Bookmark.Green)
@@ -62,14 +59,11 @@ class SourcesInYeti(Transform):
         if yeti:
             res = yeti.observable_search(value=entity.value)
             if res:
-                response += mapping_yeti_to_maltego[res[0]['type']](
-                    entity.value,
-                    bookmark=Bookmark.Green)
-                ph = Phrase('Yeti')
-                ph += Field('link', res[0]['human_url'], display_name='link')
-                response += ph
+                src = SourceYeti('Yeti')
+                src.link = 'link'
+                response += src
                 for t in res[0]['context']:
-                    ph = Phrase(t['source'])
+                    ph = SourceYeti(t['source'])
                     if 'link' in t:
                         ph += Field('link', t['link'], display_name='link')
                     response += ph

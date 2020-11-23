@@ -1,6 +1,6 @@
 import sys
 
-from canari.maltego.entities import Phrase, Domain
+from canari.maltego.entities import Phrase
 from canari.maltego.message import Entity, IntegerEntityField, StringEntityField \
     , MatchingRule, EnumEntityField, ArrayEntityField
 
@@ -19,6 +19,12 @@ class SourceYeti(Phrase):
 
     link = StringEntityField('link', display_name='link',
                              matching_rule=MatchingRule.Loose)
+
+
+class Tag(Phrase):
+    _category_ = 'Yeti'
+    _namespace_ = 'Yetigo'
+
 
 class YetiEntity(Entity):
     _category_ = 'Yeti'
