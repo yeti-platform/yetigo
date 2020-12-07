@@ -124,7 +124,6 @@ class NeighborsObservable(Transform):
                                 [s for s in item['sources']])
                             if type_obs == 'Url':
                                 entity_add.url = item['value']
-                            entity_add.tags = [t['name'] for t in item['tags']]
                             entity_add.Type = type_obs
                             created_date = parser.parse(item['created'])
                             if created_date:
