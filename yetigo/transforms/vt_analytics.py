@@ -97,21 +97,11 @@ class VTHashUrlsContacted(Transform):
 
     def do_transform(self, request, response, config):
         entity = request.entity
-        res = run_oneshot("VT Domain Contacted", request, config)
+        res = run_oneshot("VT Urls Contacted", request, config)
 
         for r in res["links"]:
-            obs = get_observable(r["src"]["id"])
+            obs = get_observable(r["src"]["id"], config)
             url = Url(obs["value"])
-            context_vt = list(
-                filter(lambda x: x["source"] == "VirusTotal", obs["context"])
-            )
-            context_filter = sorted(
-                context_vt, key=lambda x: parser.parse(x["last_seen"])
-            )[0]
-            url.link_label = "first seen: %s last modification: %s" % (
-                context_filter["first_seen"],
-                context_filter["last_modification_date"],
-            )
             response += url
         return response
 
